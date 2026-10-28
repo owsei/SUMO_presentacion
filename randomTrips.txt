@@ -1,0 +1,198 @@
+usage: randomTrips.py [-h] [-c FILE] [-C FILE] [--save-template FILE]
+                      -n NETFILE [-a ADDITIONAL]
+                      [--weights-prefix WEIGHTSPREFIX]
+                      [--edge-type-file TYPEFACTORFILE] [-o TRIPFILE]
+                      [-r ROUTEFILE] [--vtype-output VTYPEOUT]
+                      [--weights-output-prefix WEIGHTS_OUTPREFIX]
+                      [--error-log ERRORLOG] [--persons]
+                      [--personrides PERSONRIDES] [--persontrip.modes MODES]
+                      [--persontrip.transfer.car-walk CARWALKMODE]
+                      [--persontrip.walkfactor FLOAT]
+                      [--persontrip.walk-opposite-factor FLOAT]
+                      [--from-stops FROMSTOPS] [--to-stops TOSTOPS]
+                      [--prefix TRIPPREFIX] [-t TRIPATTRS]
+                      [--fringe-start-attributes FRINGEATTRS]
+                      [--vehicle-class VEHICLE_CLASS] [--random-departpos]
+                      [--random-arrivalpos] [--junction-taz] [-l] [-L]
+                      [--edge-param EDGEPARAM] [--speed-exponent FLOAT]
+                      [--fringe-speed-exponent FLOAT] [--angle ANGLE]
+                      [--angle-factor ANGLE_WEIGHT]
+                      [--random-factor RANDOMFACTOR]
+                      [--fringe-factor FRINGE_FACTOR]
+                      [--fringe-threshold FRINGE_THRESHOLD] [--allow-fringe]
+                      [--allow-fringe.min-length ALLOW_FRINGE_MIN_LENGTH]
+                      [--fringe-junctions] [--edge-permission EDGE_PERMISSION]
+                      [--via-edge-types VIAEDGETYPES] [--allow-roundabouts]
+                      [-s SEED] [--random] [--min-distance FLOAT]
+                      [--min-distance.fringe FLOAT] [--max-distance FLOAT]
+                      [-i INTERMEDIATE] [--return-to-origin] [--jtrrouter]
+                      [--maxtries MAXTRIES] [--remove-loops]
+                      [--random-routing-factor RANDOMROUTINGFACTOR]
+                      [--marouter] [--validate] [--no-validate]
+                      [--threads THREADS] [--min-success-rate MINSUCCESSRATE]
+                      [-v] [-b BEGIN] [-e END] [-p FLOAT [FLOAT ...] |
+                      --insertion-rate FLOAT [FLOAT ...] |
+                      --insertion-density FLOAT [FLOAT ...]] [--flows FLOWS]
+                      [--poisson] [--random-depart] [--binomial N]
+
+Generate trips between random locations
+
+options:
+  -h, --help            show this help message and exit
+  -c, --configuration-file FILE
+                        read configuration from FILE
+  -C, --save-configuration FILE
+                        save configuration to FILE and exit
+  --save-template FILE  save configuration template to FILE and exit
+  -n, --net-file NETFILE
+                        define the net file (mandatory)
+  -a, --additional-files ADDITIONAL
+                        define additional files to be loaded by the router
+  --weights-prefix WEIGHTSPREFIX
+                        loads probabilities for being source, destination and
+                        via-edge from the files named 'prefix'.src.xml,
+                        'prefix'.dst.xml and 'prefix'.via.xml
+  --edge-type-file TYPEFACTORFILE
+                        Load a file that defines probability factors for
+                        specific edge types (each line with 'TYPE FLOAT')
+  -o, --output-trip-file TRIPFILE
+                        define the output trip filename
+  -r, --route-file ROUTEFILE
+                        generates route file with duarouter
+  --vtype-output VTYPEOUT
+                        Store generated vehicle types in a separate file
+  --weights-output-prefix WEIGHTS_OUTPREFIX
+                        generates weights files for visualisation
+  --error-log ERRORLOG  record routing errors
+  --persons, --pedestrians, --persontrips
+                        create a person file with person trips instead of
+                        vehicle trips
+  --personrides PERSONRIDES
+                        create a person file with rides using STR as lines
+                        attribute
+  --persontrip.modes MODES
+                        Use any comma-separated combination of 'bicycle',
+                        'car', 'public' and 'taxi'
+  --persontrip.transfer.car-walk CARWALKMODE
+                        Where are mode changes from car to walking allowed
+                        (possible values: 'ptStops', 'allJunctions' and
+                        combinations)
+  --persontrip.walkfactor FLOAT
+                        Use FLOAT as a factor on pedestrian maximum speed
+                        during intermodal routing
+  --persontrip.walk-opposite-factor FLOAT
+                        Use FLOAT as a factor on pedestrian maximum speed
+                        against vehicle traffic direction
+  --from-stops FROMSTOPS
+                        Create trips that start at stopping places of the
+                        indicated type(s). i.e. 'busStop'
+  --to-stops TOSTOPS    Create trips that end at stopping places of the
+                        indicated type(s). i.e. 'busStop'
+  --prefix TRIPPREFIX   prefix for the trip ids
+  -t, --trip-attributes TRIPATTRS
+                        additional trip attributes. When generating
+                        pedestrians, attributes for 'person' and 'walk' are
+                        supported.
+  --fringe-start-attributes FRINGEATTRS
+                        additional trip attributes when starting on a fringe.
+  --vehicle-class VEHICLE_CLASS
+                        The vehicle class assigned to the generated trips
+                        (adds a standard vType definition to the output file).
+  --random-departpos    Randomly choose a position on the starting edge of the
+                        trip
+  --random-arrivalpos   Randomly choose a position on the ending edge of the
+                        trip
+  --junction-taz        Write trips with fromJunction and toJunction
+  -l, --length          weight edge probability by length
+  -L, --lanes           weight edge probability by number of lanes
+  --edge-param EDGEPARAM
+                        use the given edge parameter as factor for edge
+  --speed-exponent FLOAT
+                        weight edge probability by speed^'FLOAT' (default 0)
+  --fringe-speed-exponent FLOAT
+                        weight fringe edge probability by speed^'FLOAT'
+                        (default: speed exponent)
+  --angle ANGLE         weight edge probability by angle [0-360] relative to
+                        the network center
+  --angle-factor ANGLE_WEIGHT
+                        maximum weight factor for angle
+  --random-factor RANDOMFACTOR
+                        edge weights are dynamically disturbed by a random
+                        factor drawn uniformly from [1,FLOAT]
+  --fringe-factor FRINGE_FACTOR
+                        multiply weight of fringe edges by 'FLOAT' (default 1)
+                        or set value 'max' to force all traffic to start/end
+                        at the fringe.
+  --fringe-threshold FRINGE_THRESHOLD
+                        only consider edges with speed above 'FLOAT' as fringe
+                        edges (default 0)
+  --allow-fringe        Allow departing on edges that leave the network and
+                        arriving on edges that enter the network (via
+                        turnarounds or as 1-edge trips
+  --allow-fringe.min-length ALLOW_FRINGE_MIN_LENGTH
+                        Allow departing on edges that leave the network and
+                        arriving on edges that enter the network, if they have
+                        at least the given length
+  --fringe-junctions    Determine fringe edges based on junction attribute
+                        'fringe'
+  --edge-permission, --vclass EDGE_PERMISSION
+                        only from and to edges which permit the given vehicle
+                        class
+  --via-edge-types VIAEDGETYPES
+                        Set list of edge types that cannot be used for
+                        departure or arrival (unless being on the fringe)
+  --allow-roundabouts   Permit trips that start or end inside a roundabout
+  -s, --seed SEED       random seed
+  --random              use a random seed to initialize the random number
+                        generator
+  --min-distance FLOAT  require start and end edges for each trip to be at
+                        least 'FLOAT' m apart
+  --min-distance.fringe FLOAT
+                        require start and end edges for each fringe to fringe
+                        trip to be at least 'FLOAT' m apart
+  --max-distance FLOAT  require start and end edges for each trip to be at
+                        most 'FLOAT' m apart (default 0 which disables any
+                        checks)
+  -i, --intermediate INTERMEDIATE
+                        generates the given number of intermediate way points
+  --return-to-origin    end each trip on the opposite-direction edge of its
+                        source edge if available
+  --jtrrouter           Create flows without destination as input for
+                        jtrrouter
+  --maxtries MAXTRIES   number of attemps for finding a trip which meets the
+                        distance constraints
+  --remove-loops        Remove loops at route start and end
+  --random-routing-factor RANDOMROUTINGFACTOR
+                        Edge weights for routing are dynamically disturbed by
+                        a random factor drawn uniformly from [1,FLOAT)
+  --marouter            Compute routes with marouter instead of duarouter
+  --validate            Whether to produce trip output that is already checked
+                        for connectivity
+  --no-validate
+  --threads THREADS     Uses INT threads when validating trips (defaults to
+                        half the available CPUs
+  --min-success-rate MINSUCCESSRATE
+                        Minimum ratio of valid trips to retry sampling if some
+                        trips are invalid
+  -v, --verbose         tell me what you are doing
+  -b, --begin BEGIN     begin time
+  -e, --end END         end time (default 3600)
+  -p, --period FLOAT [FLOAT ...]
+                        Generate vehicles with equidistant departure times and
+                        period=FLOAT (default 1.0). If option --binomial is
+                        used, the expected arrival rate is set to 1/period.
+  --insertion-rate FLOAT [FLOAT ...]
+                        How many vehicles arrive in the simulation per hour
+                        (alternative to the period option).
+  --insertion-density FLOAT [FLOAT ...]
+                        How many vehicles arrive in the simulation per hour
+                        per kilometer of road (alternative to the period
+                        option).
+  --flows FLOWS         generates INT flows that together output vehicles with
+                        the specified period
+  --poisson             Flows will use poisson distributed departures
+  --random-depart       Distribute departures randomly between begin and end
+  --binomial N          If this is set, the number of departures per second
+                        will be drawn from a binomial distribution with n=N
+                        and p=PERIOD/N where PERIOD is the argument given to
+                        --period
